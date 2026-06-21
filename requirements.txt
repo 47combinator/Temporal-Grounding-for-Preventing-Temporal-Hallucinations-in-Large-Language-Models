@@ -1,0 +1,36 @@
+# Temporal Grounding and Verification Framework
+# for Preventing Temporal Hallucinations in Large Language Models
+
+# Core
+neo4j>=5.0
+openai>=1.0
+python-dotenv>=1.0
+
+# NLP
+spacy>=3.7
+
+# Data Processing
+pandas>=2.0
+numpy>=1.24
+datasets>=2.14
+
+# Graph Analysis
+networkx>=3.0
+
+# Evaluation
+scikit-learn>=1.3
+
+# Visualisation
+matplotlib>=3.7
+seaborn>=0.13
+
+# Utilities
+tqdm>=4.65
+requests>=2.31
+python-dateutil>=2.8
+
+# Testing
+pytest>=8.0
+
+# Notebooks
+jupyter>=1.0

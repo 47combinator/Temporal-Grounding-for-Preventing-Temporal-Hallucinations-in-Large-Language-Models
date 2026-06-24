@@ -1,8 +1,8 @@
 {
   "total": 20050,
-  "correct_detections": 19999,
+  "correct_detections": 20004,
   "false_positives": 0,
-  "false_negatives": 51,
+  "false_negatives": 46,
   "by_type": {
     "none": {
       "total": 5000,
@@ -18,15 +18,15 @@
     },
     "relation": {
       "total": 5000,
-      "correct": 4980
+      "correct": 4985
     },
     "ordering": {
       "total": 50,
       "correct": 50
     }
   },
-  "accuracy": 0.9974563591022444,
+  "accuracy": 0.9977057356608479,
   "precision": 1.0,
-  "recall": 0.9966112956810631,
-  "f1": 0.9983027721388399
+  "recall": 0.9969435215946844,
+  "f1": 0.998469421707593
 }

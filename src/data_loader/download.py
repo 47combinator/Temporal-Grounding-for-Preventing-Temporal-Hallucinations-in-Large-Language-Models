@@ -49,7 +49,19 @@ def download_icews14(target_dir: Path | None = None) -> Path:
     target_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Downloading ICEWS14 from Hugging Face (linxy/ICEWS14)...")
-    dataset = load_dataset("linxy/ICEWS14", "all")
+
+    # Try loading with trust_remote_code for datasets with custom scripts
+    try:
+        dataset = load_dataset("linxy/ICEWS14", "all", trust_remote_code=True)
+    except (RuntimeError, TypeError):
+        # Fallback: try without the config name
+        try:
+            dataset = load_dataset("linxy/ICEWS14", trust_remote_code=True)
+        except Exception:
+            # Last resort: download raw files directly
+            logger.info("HuggingFace datasets API failed. Downloading raw files...")
+            _download_icews14_raw(target_dir)
+            return target_dir
 
     # ------------------------------------------------------------------
     # Write split files (train / valid / test)
@@ -121,6 +133,49 @@ def _write_id_mapping(
         feature_name,
         out_path,
     )
+
+
+def _download_icews14_raw(target_dir: Path) -> None:
+    """Download ICEWS14 raw files directly from GitHub/HuggingFace.
+
+    This is the fallback when the datasets library cannot handle the
+    custom dataset script. Downloads the raw TSV files and entity/relation
+    mappings directly.
+    """
+    import urllib.request
+
+    base_url = (
+        "https://huggingface.co/datasets/linxy/ICEWS14/resolve/main/"
+    )
+
+    files_to_download = {
+        "train.txt": "train.txt",
+        "valid.txt": "valid.txt",
+        "test.txt": "test.txt",
+        "entity2id.txt": "entity2id.txt",
+        "relation2id.txt": "relation2id.txt",
+    }
+
+    for remote_name, local_name in files_to_download.items():
+        url = base_url + remote_name
+        out_path = target_dir / local_name
+        logger.info("Downloading %s -> %s", url, out_path)
+        try:
+            urllib.request.urlretrieve(url, out_path)
+        except Exception as e:
+            logger.warning("Failed to download %s: %s", remote_name, e)
+
+    # If the files don't have proper format (raw HF might have different layout),
+    # check if we got valid data
+    train_path = target_dir / "train.txt"
+    if train_path.exists():
+        with open(train_path, "r", encoding="utf-8") as f:
+            first_line = f.readline().strip()
+        if first_line:
+            parts = first_line.split("\t")
+            logger.info("First line of train.txt has %d columns: %s", len(parts), first_line[:80])
+    else:
+        logger.error("Failed to download train.txt!")
 
 
 def download_cronquestions(target_dir: Path | None = None) -> Path:

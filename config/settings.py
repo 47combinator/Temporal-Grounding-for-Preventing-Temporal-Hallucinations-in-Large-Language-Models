@@ -28,7 +28,13 @@ ICEWS14_DIR = RAW_DATA_DIR / "icews14"
 CRONQUESTIONS_DIR = RAW_DATA_DIR / "cronquestions"
 
 # ---------------------------------------------------------------------------
-# Neo4j
+# Graph Backend ("memory" for NetworkX in-memory, "neo4j" for Neo4j server)
+# ---------------------------------------------------------------------------
+
+GRAPH_BACKEND = os.getenv("GRAPH_BACKEND", "memory")
+
+# ---------------------------------------------------------------------------
+# Neo4j (only used when GRAPH_BACKEND == "neo4j")
 # ---------------------------------------------------------------------------
 
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
@@ -38,11 +44,11 @@ NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")
 NEO4J_BATCH_SIZE = 5000  # Records per UNWIND batch during bulk loading.
 
 # ---------------------------------------------------------------------------
-# Ollama / LLM
+# LLM (LM Studio / Ollama - OpenAI-compatible local API)
 # ---------------------------------------------------------------------------
 
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:1234/v1")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3-30b-a3b-abliterated-erotic-i1")
 LLM_TEMPERATURE = 0.0  # Deterministic output for reproducibility.
 LLM_MAX_TOKENS = 1024
 
